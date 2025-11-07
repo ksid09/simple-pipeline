@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Módulo - Internamiento / Atención General</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --accent:#2b6cb0;
+      --muted:#6b7280;
+      --danger:#e53e3e;
+      --success:#2f855a;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:#111827;
+      padding:20px;
+    }
+    .container{
+      max-width:1000px;
+      margin:20px auto;
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:20px;
+    }
+    header{
+      grid-column: 1 / -1;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+    }
+    h1{ margin:0; font-size:20px; }
+    .card{
+      background:var(--card);
+      border-radius:12px;
+      padding:18px;
+      box-shadow: 0 6px 18px rgba(13, 38, 59, 0.06);
+    }
+    form .row{
+      display:flex;
+      gap:12px;
+      margin-bottom:12px;
+      flex-wrap:wrap;
+    }
+    label{ font-size:13px; color:var(--muted); display:block; margin-bottom:6px; }
+    input[type="text"], input[type="date"], input[type="time"], input[type="number"], select, textarea {
+      width:100%;
+      padding:10px 12px;
+      border-radius:8px;
+      border:1px solid #e6eef6;
+      background:#fbfdff;
+      box-sizing:border-box;
+      font-size:14px;
+    }
+    textarea{ min-height:100px; resize:vertical; }
+    .col-2{ flex:1 1 48%; min-width:180px; }
+    .col-3{ flex:1 1 30%; min-width:140px; }
+    .actions{
+      display:flex;
+      gap:10px;
+      margin-top:12px;
+    }
+    button{
+      padding:10px 14px;
+      border-radius:8px;
+      border:0;
+      cursor:pointer;
+      font-weight:600;
+      font-size:14px;
+    }
+    .btn-primary{ background:var(--accent); color:white; }
+    .btn-secondary{ background:#eef2ff; color:var(--accent); }
+    .btn-danger{ background:var(--danger); color:white; }
+    .preview{ font-size:14px; color:#0f172a; }
+    .meta{ font-size:13px; color:var(--muted); margin-top:8px; }
+    .small{ font-size:13px; color:var(--muted); }
+    .badge{ display:inline-block; padding:6px 8px; border-radius:999px; background:#edf2f7; font-size:13px; }
+    .right-col{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .section-title{ font-weight:700; margin-bottom:8px; font-size:15px; }
+    .log{
+      height:260px;
+      overflow:auto;
+      background:#0b1220;
+      color:#c7d2fe;
+      padding:10px;
+      border-radius:8px;
+      font-family:monospace;
+      font-size:13px;
+    }
+    .success { color: var(--success); font-weight:700; }
+    .error { color: var(--danger); font-weight:700; }
+    @media (max-width:940px){
+      .container{ grid-template-columns: 1fr; }
+      .right-col{ order: 2; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Módulo: Internamiento / Atención General</h1>
+        <div class="small">Formulario demo para curso DevOps — despliega con GitHub Pages</div>
+      </div>
+      <div class="badge">Estado: <strong>Demo</strong></div>
+    </header>
+
+    <!-- Formulario principal -->
+    <section class="card">
+      <div class="section-title">Datos del paciente</div>
+
+      <form id="admissionForm" autocomplete="off">
+        <div class="row">
+          <div class="col-2">
+            <label for="nombre">Nombre completo</label>
+            <input id="nombre" name="nombre" type="text" placeholder="Ej: Ana Pérez" required />
+          </div>
+          <div class="col-3">
+            <label for="edad">Edad</label>
+            <input id="edad" name="edad" type="number" min="0" placeholder="Edad" required />
+          </div>
+          <div class="col-3">
+            <label for="sexo">Sexo</label>
+            <select id="sexo" name="sexo" required>
+              <option value="">-- seleccionar --</option>
+              <option>Femenino</option>
+              <option>Masculino</option>
+              <option>Otro</option>
+              <option>Prefiero no decir</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label for="documento">Documento (DNI / CE)</label>
+            <input id="documento" name="documento" type="text" placeholder="E.g. 12345678" required />
+          </div>
+          <div class="col-2">
+            <label for="telefono">Teléfono</label>
+            <input id="telefono" name="telefono" type="text" placeholder="9XXXXXXXX" />
+          </div>
+          <div class="col-2">
+            <label for="email">Correo electrónico</label>
+            <input id="email" name="email" type="text" placeholder="opcional@correo.com" />
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:8px">Información de atención</div>
+
+        <div class="row">
+          <div class="col-2">
+            <label for="fecha">Fecha de ingreso</label>
+            <input id="fecha" name="fecha" type="date" required />
+          </div>
+          <div class="col-3">
+            <label for="hora">Hora</label>
+            <input id="hora" name="hora" type="time" required />
+          </div>
+          <div class="col-3">
+            <label for="servicio">Servicio</label>
+            <select id="servicio" name="servicio" required>
+              <option value="">-- seleccionar --</option>
+              <option>Emergencia</option>
+              <option>Maternidad</option>
+              <option>Medicina General</option>
+              <option>Pediatría</option>
+              <option>Traumatología</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label for="motivo">Motivo de ingreso / síntoma principal</label>
+            <input id="motivo" name="motivo" type="text" placeholder="Breve descripción" required />
+          </div>
+
+          <div class="col-2">
+            <label for="doctor">Doctor asignado</label>
+            <input id="doctor" name="doctor" type="text" placeholder="Ej: Dr. Luis Gómez" />
+          </div>
+
+          <div class="col-2">
+            <label for="habitacion">Habitación / cama</label>
+            <input id="habitacion" name="habitacion" type="text" placeholder="E.g. A-12" />
+          </div>
+        </div>
+
+        <div style="margin-top:8px">
+          <label for="observaciones">Observaciones clínicas</label>
+          <textarea id="observaciones" name="observaciones" placeholder="Antecedentes, alergias, presión arterial, etc."></textarea>
+        </div>
+
+        <div class="row" style="margin-top:12px; align-items:center">
+          <div style="flex:1">
+            <label><input id="urgente" name="urgente" type="checkbox" /> Atención urgente</label>
+            <div class="meta">Marcar si el paciente requiere evaluación prioritaria</div>
+          </div>
+          <div style="flex:0">
+            <div class="small">ID de registro</div>
+            <div id="registroId" class="meta">—</div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn-primary" id="btnSave">Guardar (generar JSON)</button>
+          <button type="button" class="btn-secondary" id="btnPreview">Ver vista previa</button>
+          <button type="button" class="btn-danger" id="btnClear">Limpiar</button>
+        </div>
+
+        <div id="formMsg" class="meta" style="margin-top:10px"></div>
+      </form>
+    </section>
+
+    <!-- Columna derecha: preview y logs -->
+    <aside class="right-col">
+      <div class="card">
+        <div class="section-title">Vista previa (Último guardado)</div>
+        <div id="preview" class="preview">No hay datos guardados.</div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Registro / Logs</div>
+        <div id="log" class="log">[Sistema] Listo para recibir datos...</div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Acciones rápidas</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button id="downloadJson" class="btn-secondary">Descargar JSON</button>
+          <button id="copyJson" class="btn-secondary">Copiar JSON</button>
+        </div>
+        <div class="meta" style="margin-top:8px">Estos botones operan sobre el último registro guardado.</div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    // Pequeña utilidad para generar ID simple
+    function genId() {
+      const d = new Date();
+      return 'REG-' + d.getFullYear().toString().slice(2) + 
+             ('0'+(d.getMonth()+1)).slice(-2) +
+             ('0'+d.getDate()).slice(-2) + '-' + Math.random().toString(36).slice(2,7).toUpperCase();
+    }
+
+    const form = document.getElementById('admissionForm');
+    const btnSave = document.getElementById('btnSave');
+    const btnPreview = document.getElementById('btnPreview');
+    const btnClear = document.getElementById('btnClear');
+    const registroIdElem = document.getElementById('registroId');
+    const preview = document.getElementById('preview');
+    const log = document.getElementById('log');
+    const formMsg = document.getElementById('formMsg');
+    const downloadJson = document.getElementById('downloadJson');
+    const copyJson = document.getElementById('copyJson');
+
+    let lastRecord = null;
+
+    function appendLog(text, type='info') {
+      const time = new Date().toLocaleTimeString();
+      const line = `[${time}] ${text}\\n`;
+      log.textContent = line + log.textContent;
+    }
+
+    function readFormData() {
+      const data = {
+        id: lastRecord?.id || genId(),
+        nombre: document.getElementById('nombre').value.trim(),
+        edad: document.getElementById('edad').value,
+        sexo: document.getElementById('sexo').value,
+        documento: document.getElementById('documento').value.trim(),
+        telefono: document.getElementById('telefono').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        fecha_ingreso: document.getElementById('fecha').value,
+        hora_ingreso: document.getElementById('hora').value,
+        servicio: document.getElementById('servicio').value,
+        motivo: document.getElementById('motivo').value.trim(),
+        doctor: document.getElementById('doctor').value.trim(),
+        habitacion: document.getElementById('habitacion').value.trim(),
+        observaciones: document.getElementById('observaciones').value.trim(),
+        urgente: document.getElementById('urgente').checked,
+        created_at: new Date().toISOString()
+      };
+      return data;
+    }
+
+    function validate(data) {
+      const errors = [];
+      if (!data.nombre) errors.push('Nombre es obligatorio.');
+      if (!data.documento) errors.push('Documento es obligatorio.');
+      if (!data.fecha_ingreso) errors.push('Fecha de ingreso es obligatoria.');
+      if (!data.hora_ingreso) errors.push('Hora es obligatoria.');
+      if (!data.servicio) errors.push('Servicio es obligatorio.');
+      if (!data.motivo) errors.push('Motivo es obligatorio.');
+      if (data.edad && (isNaN(Number(data.edad)) || Number(data.edad) < 0)) errors.push('Edad inválida.');
+      return errors;
+    }
+
+    function renderPreview(record) {
+      if (!record) {
+        preview.innerHTML = 'No hay datos guardados.';
+        return;
+      }
+      registroIdElem.textContent = record.id;
+      const html = `
+        <strong>${record.nombre}</strong> <span class="small">(${record.edad || '—'} años) - ${record.sexo || '—'}</span>
+        <div class="meta" style="margin-top:8px">
+          <div><strong>Documento:</strong> ${record.documento || '—'}</div>
+          <div><strong>Teléfono:</strong> ${record.telefono || '—'}</div>
+          <div><strong>Email:</strong> ${record.email || '—'}</div>
+          <div style="margin-top:6px"><strong>Ingreso:</strong> ${record.fecha_ingreso || '—'} ${record.hora_ingreso || ''}</div>
+          <div><strong>Servicio:</strong> ${record.servicio || '—'}</div>
+          <div><strong>Motivo:</strong> ${record.motivo || '—'}</div>
+          <div><strong>Doctor:</strong> ${record.doctor || '—'}</div>
+          <div><strong>Habitación:</strong> ${record.habitacion || '—'}</div>
+          <div style="margin-top:8px"><strong>Urgente:</strong> ${record.urgente ? 'Sí' : 'No'}</div>
+          <div style="margin-top:8px"><strong>Observaciones:</strong> <div class="meta">${record.observaciones || '—'}</div></div>
+        </div>
+      `;
+      preview.innerHTML = html;
+    }
+
+    btnSave.addEventListener('click', () => {
+      const data = readFormData();
+      const errors = validate(data);
+      if (errors.length) {
+        formMsg.innerHTML = '<span class="error">Errores: </span>' + errors.join(' ');
+        appendLog('Validación fallida: ' + errors.join('; '));
+        return;
+      }
+      // Guardado local (simulado)
+      lastRecord = data;
+      renderPreview(lastRecord);
+      formMsg.innerHTML = '<span class="success">Guardado localmente.</span>';
+      appendLog('Registro guardado: ' + data.id);
+    });
+
+    btnPreview.addEventListener('click', () => {
+      const data = readFormData();
+      const errors = validate(data);
+      if (errors.length) {
+        formMsg.innerHTML = '<span class="error">Errores: </span>' + errors.join(' ');
+        appendLog('Validación fallida (preview): ' + errors.join('; '));
+        return;
+      }
+      renderPreview(data);
+      formMsg.innerHTML = '<span class="small">Vista previa (no guardada).</span>';
+      appendLog('Se generó vista previa.');
+    });
+
+    btnClear.addEventListener('click', () => {
+      form.reset();
+      lastRecord = null;
+      renderPreview(null);
+      registroIdElem.textContent = '—';
+      formMsg.innerHTML = '';
+      appendLog('Formulario limpiado.');
+    });
+
+    downloadJson.addEventListener('click', () => {
+      if (!lastRecord) {
+        appendLog('No hay registro para descargar.');
+        formMsg.innerHTML = '<span class="error">No hay registro para descargar.</span>';
+        return;
+      }
+      const blob = new Blob([JSON.stringify(lastRecord, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = (lastRecord.id || 'registro') + '.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      appendLog('JSON descargado: ' + (lastRecord.id || 'registro'));
+    });
+
+    copyJson.addEventListener('click', async () => {
+      if (!lastRecord) {
+        appendLog('No hay registro para copiar.');
+        formMsg.innerHTML = '<span class="error">No hay registro para copiar.</span>';
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(JSON.stringify(lastRecord, null, 2));
+        formMsg.innerHTML = '<span class="success">JSON copiado al portapapeles.</span>';
+        appendLog('JSON copiado al portapapeles.');
+      } catch (e) {
+        formMsg.innerHTML = '<span class="error">Error al copiar (revisa permisos).</span>';
+        appendLog('Error al copiar JSON: ' + e.message);
+      }
+    });
+
+    // Inicialización: fijar fecha/hora actuales
+    (function init(){
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = ('0'+(now.getMonth()+1)).slice(-2);
+      const dd = ('0'+now.getDate()).slice(-2);
+      const hh = ('0'+now.getHours()).slice(-2);
+      const min = ('0'+now.getMinutes()).slice(-2);
+      document.getElementById('fecha').value = `${yyyy}-${mm}-${dd}`;
+      document.getElementById('hora').value = `${hh}:${min}`;
+    })();
+
+  </script>
+</body>
+</html>
